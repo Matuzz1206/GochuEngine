@@ -132,6 +132,7 @@
   </ItemDefinitionGroup>
   <ItemGroup>
     <ClInclude Include="Inc\App.h" />
+    <ClInclude Include="Inc\AppState.h" />
     <ClInclude Include="Inc\Common.h" />
     <ClInclude Include="Inc\GochuEngine.h" />
     <ClInclude Include="Src\Precompiled.h" />
@@ -146,6 +147,12 @@
   <ItemGroup>
     <ProjectReference Include="..\..\Framework\Core\Core.vcxproj">
       <Project>{359ac72a-34c6-4373-839b-5a0dcdc3e773}</Project>
+    </ProjectReference>
+    <ProjectReference Include="..\..\Framework\Graphics\Graphics.vcxproj">
+      <Project>{c0cb9cd8-7dd8-4259-91a7-c20349b9c1ec}</Project>
+    </ProjectReference>
+    <ProjectReference Include="..\..\Framework\Math\Math.vcxproj">
+      <Project>{ddef90a3-70aa-4c6d-8e61-b55d0c954d25}</Project>
     </ProjectReference>
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
