@@ -4,3 +4,10 @@
 
 #include "App.h"
 #include "AppState.h"
+
+
+
+namespace GochuEngine
+{
+	App& MainApp();
+}

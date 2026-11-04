@@ -32,5 +32,8 @@
     <ClCompile Include="Src\App.cpp">
       <Filter>Src</Filter>
     </ClCompile>
+    <ClCompile Include="Src\GochuEngine.cpp">
+      <Filter>Src</Filter>
+    </ClCompile>
   </ItemGroup>
 </Project>

@@ -1,243 +1,244 @@
 #include "Precompiled.h"
 #include "GraphicsSystem.h"
 
-
 using namespace GochuEngine;
 using namespace GochuEngine::Graphics;
 
+// doing this no name namespace makes it so only this file can access what is in here
 namespace
 {
-	std::unique_ptr<GraphicsSystem> sGraphicsSystem;
-	Core::WindowMessageHandler sWindowMessageHandler;
-
+	std::unique_ptr<GraphicsSystem> s_GraphicsSystem;
+	Core::WindowMessageHandler s_windowMessageHandler;
 }
 
-LRESULT CALLBACK GraphicsSystem::GraphicsSystemMessageHandler(HWND window, UINT msg, WPARAM wParam, LPARAM lParam)
+LRESULT GochuEngine::Graphics::GraphicsSystem::GraphicsSystemMessageHandler(HWND window, UINT msg, WPARAM wParam, LPARAM lParam)
 {
-    if (sGraphicsSystem != nullptr)
-    {
-        switch (msg)
-        {
-        case WM_SIZE:
-        {
-            const uint32_t width = static_cast<uint32_t>(LOWORD(lParam));
-            const uint32_t height = static_cast<uint32_t>(HIWORD(lParam));
-            sGraphicsSystem->Resize(width, height);
-            break;
-        }
-        default:
-            break;
-        }
-    }
+	if (s_GraphicsSystem != nullptr)
+	{
+		switch (msg)
+		{
+		case WM_SIZE:
+		{
+			const uint32_t width = static_cast<uint32_t>(LOWORD(lParam));
+			const uint32_t height = static_cast<uint32_t>(HIWORD(lParam));
+			s_GraphicsSystem->Resize(width, height);
+			break;
 
-    return sWindowMessageHandler.ForwardMessage(window, msg, wParam, lParam);
+		}
+		default:
+			break;
+		}
+	}
+	return s_windowMessageHandler.ForwardMessage(window, msg, wParam, lParam);
 }
 
-void GraphicsSystem::StaticInitialize(HWND window, bool fullscreen)
+void GochuEngine::Graphics::GraphicsSystem::StaticInitialize(HWND window, bool fullscreen)
 {
-    ASSERT(sGraphicsSystem == nullptr, "GraphicsSystem is already initialized");
-    sGraphicsSystem = std::make_unique<GraphicsSystem>();
-    sGraphicsSystem->Initialize(window, fullscreen);
+	ASSERT(s_GraphicsSystem == nullptr, "GraphicsSystem: is already initialized");
+	s_GraphicsSystem = std::make_unique<GraphicsSystem>();
+	s_GraphicsSystem->Initialize(window, fullscreen);
 }
 
-void GraphicsSystem::StaticTerminate()
+void GochuEngine::Graphics::GraphicsSystem::StaticTerminate()
 {
-    if (sGraphicsSystem != nullptr)
-    {
-        sGraphicsSystem->Terminate();
-        sGraphicsSystem.reset();
-    }
+	if (s_GraphicsSystem != nullptr)
+	{
+		s_GraphicsSystem->Terminate();
+		s_GraphicsSystem.reset();
+	}
 }
 
-GraphicsSystem* GraphicsSystem::Get()
+GraphicsSystem* Graphics::GraphicsSystem::Get()
 {
-    ASSERT(sGraphicsSystem != nullptr, "GraphicsSystem: is not initialized");
-    return sGraphicsSystem.get();
+	ASSERT(s_GraphicsSystem != nullptr, "GraphicsSystem: is not initialized");
+	return s_GraphicsSystem.get();
 }
 
 GraphicsSystem::~GraphicsSystem()
 {
-    ASSERT(mD3DDevice == nullptr && mImmediateContext == nullptr, "GraphicsSystem: must be terminated");
+	ASSERT(m_D3DDevice == nullptr && m_immediateContext == nullptr, "GraphicsSystem: must be terminated");
 }
 
-void GraphicsSystem::Initialize(HWND window, bool fullscreen)
+void GochuEngine::Graphics::GraphicsSystem::Initialize(HWND window, bool fullscreen)
 {
-    RECT clientRect{};
-    GetClientRect(window, &clientRect);
-    UINT width = (UINT)(clientRect.right - clientRect.left);
-    UINT height = (UINT)(clientRect.bottom - clientRect.top);
+	RECT clientRect{};
+	GetClientRect(window, &clientRect);
+	UINT width = (UINT)(clientRect.right - clientRect.left);
+	UINT height = (UINT)(clientRect.bottom - clientRect.top);
 
-    DXGI_SWAP_CHAIN_DESC swapChainDesc{};
-    swapChainDesc.BufferCount = 2;
-    swapChainDesc.BufferDesc.Width = width;
-    swapChainDesc.BufferDesc.Height = height;
-    swapChainDesc.BufferDesc.Format = DXGI_FORMAT_R8G8B8A8_UNORM;
-    swapChainDesc.BufferDesc.RefreshRate.Numerator = 60;
-    swapChainDesc.BufferDesc.RefreshRate.Denominator = 1;
-    swapChainDesc.BufferUsage = DXGI_USAGE_RENDER_TARGET_OUTPUT;
-    swapChainDesc.OutputWindow = window;
-    swapChainDesc.SampleDesc.Count = 1;
-    swapChainDesc.SampleDesc.Quality = 0;
-    swapChainDesc.Windowed = !fullscreen;
-    swapChainDesc.SwapEffect = DXGI_SWAP_EFFECT_DISCARD;
+	DXGI_SWAP_CHAIN_DESC swapChainDesc{};
+	swapChainDesc.BufferCount = 2;
+	swapChainDesc.BufferDesc.Width = width;
+	swapChainDesc.BufferDesc.Height = height;
+	swapChainDesc.BufferDesc.Format = DXGI_FORMAT_R8G8B8A8_UNORM;
+	swapChainDesc.BufferDesc.RefreshRate.Numerator = 60;
+	swapChainDesc.BufferDesc.RefreshRate.Denominator = 1;
+	swapChainDesc.BufferUsage = DXGI_USAGE_RENDER_TARGET_OUTPUT;
+	swapChainDesc.OutputWindow = window;
+	swapChainDesc.SampleDesc.Count = 1;
+	swapChainDesc.SampleDesc.Quality = 0;
+	swapChainDesc.Windowed = !fullscreen;
+	swapChainDesc.SwapEffect = DXGI_SWAP_EFFECT_DISCARD;
 
-    const D3D_FEATURE_LEVEL featureLevel = D3D_FEATURE_LEVEL_11_1;
+	const D3D_FEATURE_LEVEL featureLevel = D3D_FEATURE_LEVEL_11_1;
 
-    HRESULT hr = D3D11CreateDeviceAndSwapChain(
-        nullptr,
-        D3D_DRIVER_TYPE_HARDWARE,
-        nullptr,
-        0,
-        &featureLevel,
-        1,
-        D3D11_SDK_VERSION,
-        &swapChainDesc,
-        &mSwapChain,
-        &mD3DDevice,
-        nullptr,
-        &mImmediateContext);
 
-    ASSERT(SUCCEEDED(hr), "GraphicsSystem: failed to initialize device or swap chain");
-    mSwapChain->GetDesc(&mSwapChainDesc);
+	HRESULT hr = D3D11CreateDeviceAndSwapChain(
+		nullptr,
+		D3D_DRIVER_TYPE_HARDWARE,
+		nullptr,
+		0,
+		&featureLevel,
+		1,
+		D3D11_SDK_VERSION,
+		&swapChainDesc,
+		&m_swapChain,
+		&m_D3DDevice,
+		nullptr,
+		&m_immediateContext);
 
-    Resize(GetBackBufferWidth(), GetBackBufferHeight());
+	ASSERT(SUCCEEDED(hr), "GraphicsSystem: failed to initialize device or swap chain");
+	m_swapChain->GetDesc(&m_swapChainDesc);
 
-    sWindowMessageHandler.Hook(window, GraphicsSystem::GraphicsSystemMessageHandler);
+	Resize(GetBackBufferWidth(), GetBackBufferHeight());
+
+	s_windowMessageHandler.Hook(window, GraphicsSystem::GraphicsSystemMessageHandler);
 }
 
-void GraphicsSystem::Terminate()
+void GochuEngine::Graphics::GraphicsSystem::Terminate()
 {
-    sWindowMessageHandler.Unhook();
+	s_windowMessageHandler.Unhook();
 
-    SafeRelease(mDepthStencilBuffer);
-    SafeRelease(mDepthStencilView);
-    SafeRelease(mRenderTargetView);
-    SafeRelease(mSwapChain);
-    SafeRelease(mImmediateContext);
-    SafeRelease(mD3DDevice);
+	SafeRelease(m_depthStencilBuffer);
+	SafeRelease(m_depthStencilView);
+	SafeRelease(m_renderTargetView);
+	SafeRelease(m_swapChain);
+	SafeRelease(m_immediateContext);
+	SafeRelease(m_D3DDevice);
 }
 
-void GraphicsSystem::BeginRender()
+void GochuEngine::Graphics::GraphicsSystem::BeginRender()
 {
-    mImmediateContext->OMSetRenderTargets(1, &mRenderTargetView, mDepthStencilView);
-    mImmediateContext->ClearRenderTargetView(mRenderTargetView, (FLOAT*)(&mClearColor));
-    mImmediateContext->ClearDepthStencilView(mDepthStencilView, D3D11_CLEAR_DEPTH | D3D11_CLEAR_STENCIL, 1.0f, 0.0f);
+	m_immediateContext->OMSetRenderTargets(1, &m_renderTargetView, m_depthStencilView);
+	m_immediateContext->ClearRenderTargetView(m_renderTargetView, (FLOAT*)(&m_clearColor));
+	m_immediateContext->ClearDepthStencilView(m_depthStencilView, D3D11_CLEAR_DEPTH | D3D11_CLEAR_STENCIL, 1.0f, 0.0f);
 }
 
-void GraphicsSystem::EndRender()
+void GochuEngine::Graphics::GraphicsSystem::EndRender()
 {
-    mSwapChain->Present(mVSync, 0);
+	m_swapChain->Present(m_vSync, 0);
 }
 
-void GraphicsSystem::ToggleFullScreen()
+void GochuEngine::Graphics::GraphicsSystem::ToggleFullScreen()
 {
-    BOOL fullscreen;
-    mSwapChain->GetFullscreenState(&fullscreen, nullptr);
-    mSwapChain->SetFullscreenState(!fullscreen, nullptr);
+	BOOL fullscreen;
+	m_swapChain->GetFullscreenState(&fullscreen, nullptr);
+	m_swapChain->SetFullscreenState(!fullscreen, nullptr);
 }
 
-void GraphicsSystem::Resize(uint32_t width, uint32_t height)
+void GochuEngine::Graphics::GraphicsSystem::Resize(uint32_t width, uint32_t height)
 {
-    mImmediateContext->OMSetRenderTargets(0, nullptr, nullptr);
+	m_immediateContext->OMSetRenderTargets(0, nullptr, nullptr);
 
-    SafeRelease(mRenderTargetView);
-    SafeRelease(mDepthStencilView);
-    SafeRelease(mDepthStencilBuffer);
+	SafeRelease(m_renderTargetView);
+	SafeRelease(m_depthStencilView);
+	SafeRelease(m_depthStencilBuffer);
 
-    HRESULT hr;
-    if (width != GetBackBufferWidth() || height != GetBackBufferHeight())
-    {
-        hr = mSwapChain->ResizeBuffers(0, 0, 0, DXGI_FORMAT_UNKNOWN, 0);
-        ASSERT(SUCCEEDED(hr), "GraphicsSystem: failed to access swap chain view");
+	HRESULT hr;
+	if (width != GetBackBufferWidth() || height != GetBackBufferHeight())
+	{
+		hr = m_swapChain->ResizeBuffers(0, 0, 0, DXGI_FORMAT_UNKNOWN, 0);
+		ASSERT(SUCCEEDED(hr), "GraphicsSystem: failed to access swap chain view");
 
-        mSwapChain->GetDesc(&mSwapChainDesc);
-    }
+		m_swapChain->GetDesc(&m_swapChainDesc);
+	}
 
-    ID3D11Texture2D* backBuffer = nullptr;
-    hr = mSwapChain->GetBuffer(0, IID_PPV_ARGS(&backBuffer));
-    ASSERT(SUCCEEDED(hr), "GraphicsSystem: failed to get back buffer");
+	ID3D11Texture2D* backBuffer = nullptr;
+	hr = m_swapChain->GetBuffer(0, IID_PPV_ARGS(&backBuffer));
+	ASSERT(SUCCEEDED(hr), "GraphicsSystem: failed to get back buffer");
 
-    hr = mD3DDevice->CreateRenderTargetView(backBuffer, nullptr, &mRenderTargetView);
-    ASSERT(SUCCEEDED(hr), "GraphicsSystem: failed to create render target");
+	hr = m_D3DDevice->CreateRenderTargetView(backBuffer, nullptr, &m_renderTargetView);
+	ASSERT(SUCCEEDED(hr), "GraphicsSystem: failed to create render target");
+	SafeRelease(backBuffer);
 
-    SafeRelease(backBuffer);
+	D3D11_TEXTURE2D_DESC depthDesc{};
+	depthDesc.Width = GetBackBufferWidth();
+	depthDesc.Height = GetBackBufferHeight();
+	depthDesc.MipLevels = 1;
+	depthDesc.ArraySize = 1;
+	depthDesc.Format = DXGI_FORMAT_D24_UNORM_S8_UINT;
+	depthDesc.SampleDesc.Count = 1;
+	depthDesc.SampleDesc.Quality = 0;
+	depthDesc.Usage = D3D11_USAGE_DEFAULT;
+	depthDesc.BindFlags = D3D11_BIND_DEPTH_STENCIL;
+	depthDesc.CPUAccessFlags = 0;
+	depthDesc.MiscFlags = 0;
 
-    D3D11_TEXTURE2D_DESC depthDesc{};
-    depthDesc.Width = GetBackBufferWidth();
-    depthDesc.Height = GetBackBufferHeight();
-    depthDesc.MipLevels = 1;
-    depthDesc.ArraySize = 1;
-    depthDesc.Format = DXGI_FORMAT_D24_UNORM_S8_UINT;
-    depthDesc.SampleDesc.Count = 1;
-    depthDesc.SampleDesc.Quality = 0;
-    depthDesc.Usage = D3D11_USAGE_DEFAULT;
-    depthDesc.BindFlags = D3D11_BIND_DEPTH_STENCIL;
-    depthDesc.CPUAccessFlags = 0;
-    depthDesc.MiscFlags = 0;
+	hr = m_D3DDevice->CreateTexture2D(&depthDesc, nullptr, &m_depthStencilBuffer);
+	ASSERT(SUCCEEDED(hr), "GraphicsSystem: faied to create stencil buffer");
 
-    hr = mD3DDevice->CreateTexture2D(&depthDesc, nullptr, &mDepthStencilBuffer);
-    ASSERT(SUCCEEDED(hr), "GraphicsSystem: failed to create stencil buffer");
+	D3D11_DEPTH_STENCIL_VIEW_DESC dsvDesc{};
+	dsvDesc.Format = depthDesc.Format;
+	dsvDesc.ViewDimension = D3D11_DSV_DIMENSION_TEXTURE2D;
+	dsvDesc.Texture2D.MipSlice = 0;
 
-    D3D11_DEPTH_STENCIL_VIEW_DESC dsvDesc{};
-    dsvDesc.Format = depthDesc.Format;
-    dsvDesc.ViewDimension = D3D11_DSV_DIMENSION_TEXTURE2D;
-    dsvDesc.Texture2D.MipSlice = 0;
+	hr = m_D3DDevice->CreateDepthStencilView(m_depthStencilBuffer, &dsvDesc, &m_depthStencilView);
+	ASSERT(SUCCEEDED(hr), "GraphicsSystem: failed to create depth stencil view");
 
-    hr = mD3DDevice->CreateDepthStencilView(mDepthStencilBuffer, &dsvDesc, &mDepthStencilView);
-    ASSERT(SUCCEEDED(hr), "GraphicsSystem: failed to create depth stencil view");
+	ResetRenderTarget();
 
-    ResetRenderTarget();
+	m_viewport.Width = static_cast<float>(GetBackBufferWidth());
+	m_viewport.Height = static_cast<float>(GetBackBufferHeight());
 
-    mViewport.Width = static_cast<float>(GetBackBufferWidth());
-    mViewport.Height = static_cast<float>(GetBackBufferHeight());
-    mViewport.MinDepth = 0.0f;
-    mViewport.MaxDepth = 1.0f;
-    mViewport.TopLeftX = 0.0f;
-    mViewport.TopLeftY = 0.0f;
-    ResetViewport();
+	m_viewport.MinDepth = 0.0f;
+	m_viewport.MaxDepth = 1.0f;
+	m_viewport.TopLeftX = 0.0f;
+	m_viewport.TopLeftY = 0.0f;
+	ResetViewport();
+
 }
-void GraphicsSystem::ResetRenderTarget()
+
+void GochuEngine::Graphics::GraphicsSystem::ResetRenderTarget()
 {
-    mImmediateContext->OMSetRenderTargets(1, &mRenderTargetView, mDepthStencilView);
+	m_immediateContext->OMSetRenderTargets(1, &m_renderTargetView, m_depthStencilView);
 }
 
-void GraphicsSystem::ResetViewport()
+void GochuEngine::Graphics::GraphicsSystem::ResetViewport()
 {
-    mImmediateContext->RSSetViewports(1, &mViewport);
+	m_immediateContext->RSSetViewports(1, &m_viewport);
 }
 
-void GraphicsSystem::SetClearColor(const Color& color)
+void GochuEngine::Graphics::GraphicsSystem::SetClearColor(const Color& color)
 {
-    mClearColor = color;
+	m_clearColor = color;
 }
 
-void GraphicsSystem::SetVSync(bool vSync)
+void GochuEngine::Graphics::GraphicsSystem::SetVSync(bool vSync)
 {
-    mVSync = vSync ? 1 : 0;
+	m_vSync = vSync ? 1 : 0;
 }
 
-uint32_t GraphicsSystem::GetBackBufferWidth() const
+uint32_t GochuEngine::Graphics::GraphicsSystem::GetBackBufferWidth() const
 {
-    return mSwapChainDesc.BufferDesc.Width;
+	return m_swapChainDesc.BufferDesc.Width;
 }
 
-uint32_t GraphicsSystem::GetBackBufferHeight() const
+uint32_t GochuEngine::Graphics::GraphicsSystem::GetBackBufferHeight() const
 {
-    return mSwapChainDesc.BufferDesc.Height;
+	return m_swapChainDesc.BufferDesc.Height;
 }
 
-float GraphicsSystem::GetBackBufferAspectRatio() const
+float GochuEngine::Graphics::GraphicsSystem::GetBackBufferAspectRatio() const
 {
-    return static_cast<float>(GetBackBufferWidth()) / static_cast<float>(GetBackBufferHeight());
+	return static_cast<float>(GetBackBufferWidth()) / static_cast<float>(GetBackBufferHeight());
 }
 
-ID3D11Device* GraphicsSystem::GetDevice()
+ID3D11Device* GochuEngine::Graphics::GraphicsSystem::GetDevice()
 {
-    return mD3DDevice;
+	return m_D3DDevice;
 }
 
-ID3D11DeviceContext* GraphicsSystem::GetContext()
+ID3D11DeviceContext* GochuEngine::Graphics::GraphicsSystem::GetContext()
 {
-    return mImmediateContext;
+	return m_immediateContext;
 }
-
