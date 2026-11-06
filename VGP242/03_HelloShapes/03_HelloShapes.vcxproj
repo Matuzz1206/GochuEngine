@@ -59,19 +59,19 @@
   </ImportGroup>
   <ImportGroup Label="PropertySheets" Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">
     <Import Project="$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props" Condition="exists('$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props')" Label="LocalAppDataPlatform" />
-    <Import Project="..\VSProps\GochuEngineApp.props" />
+    <Import Project="..\..\VSProps\GochuEngineApp.props" />
   </ImportGroup>
   <ImportGroup Label="PropertySheets" Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">
     <Import Project="$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props" Condition="exists('$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props')" Label="LocalAppDataPlatform" />
-    <Import Project="..\VSProps\GochuEngineApp.props" />
+    <Import Project="..\..\VSProps\GochuEngineApp.props" />
   </ImportGroup>
   <ImportGroup Label="PropertySheets" Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">
     <Import Project="$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props" Condition="exists('$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props')" Label="LocalAppDataPlatform" />
-    <Import Project="..\VSProps\GochuEngineApp.props" />
+    <Import Project="..\..\VSProps\GochuEngineApp.props" />
   </ImportGroup>
   <ImportGroup Label="PropertySheets" Condition="'$(Configuration)|$(Platform)'=='Release|x64'">
     <Import Project="$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props" Condition="exists('$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props')" Label="LocalAppDataPlatform" />
-    <Import Project="..\VSProps\GochuEngineApp.props" />
+    <Import Project="..\..\VSProps\GochuEngineApp.props" />
   </ImportGroup>
   <PropertyGroup Label="UserMacros" />
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">
@@ -127,18 +127,22 @@
     </Link>
   </ItemDefinitionGroup>
   <ItemGroup>
-    <ProjectReference Include="..\Engine\GochuEngine\GochuEngine.vcxproj">
-      <Project>{da9f497a-94bc-4e4a-adae-d1939e240a07}</Project>
-    </ProjectReference>
-  </ItemGroup>
-  <ItemGroup>
+    <ClCompile Include="DiamondState.cpp" />
     <ClCompile Include="DoColorState.cpp" />
     <ClCompile Include="DoSomethingState.cpp" />
+    <ClCompile Include="HeartState.cpp" />
     <ClCompile Include="WinMain.cpp" />
   </ItemGroup>
   <ItemGroup>
+    <ClInclude Include="DiamondState.h" />
     <ClInclude Include="DoColorState.h" />
     <ClInclude Include="DoSomethingState.h" />
+    <ClInclude Include="HeartState.h" />
+  </ItemGroup>
+  <ItemGroup>
+    <ProjectReference Include="..\..\Engine\GochuEngine\GochuEngine.vcxproj">
+      <Project>{da9f497a-94bc-4e4a-adae-d1939e240a07}</Project>
+    </ProjectReference>
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">

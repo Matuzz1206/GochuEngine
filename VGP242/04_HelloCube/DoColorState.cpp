@@ -1,13 +1,14 @@
-#include "DoSomethingState.h"
+#include "DoColorState.h"
 
+using namespace GochuEngine;
 using namespace GochuEngine::Graphics;
 using namespace GochuEngine::Input;
-void DoSomethingState::Initialize()
+void DoColorState::Initialize()
 {
 	// create a shape
-	m_vertices.push_back({ { -0.5f, 0.0f, 0.0f } });
-	m_vertices.push_back({ { 0.0f, 0.5f, 0.0f } });
-	m_vertices.push_back({ { 0.5f, 0.0f, 0.0f } });
+	m_vertices.push_back({ { -0.5f, 0.0f, 0.0f } , Colors::Red });
+	m_vertices.push_back({ { 0.0f, 0.5f, 0.0f } ,Colors::Red });
+	m_vertices.push_back({ { 0.5f, 0.0f, 0.0f }, Colors::Red });
 
 	// start creating the components that communicate with  GPU
 	auto device = GraphicsSystem::Get()->GetDevice();
@@ -58,6 +59,7 @@ void DoSomethingState::Initialize()
 	// what is the make up of the vertex
 	std::vector<D3D11_INPUT_ELEMENT_DESC> vertexLayout;
 	vertexLayout.push_back({ "POSITION", 0, DXGI_FORMAT_R32G32B32_FLOAT, 0, D3D11_APPEND_ALIGNED_ELEMENT });
+	vertexLayout.push_back({ "COLOR", 0, DXGI_FORMAT_R32G32B32A32_FLOAT, 0, D3D11_APPEND_ALIGNED_ELEMENT });
 
 	hr = device->CreateInputLayout(
 		vertexLayout.data(),
@@ -95,12 +97,16 @@ void DoSomethingState::Initialize()
 	SafeRelease(errorBlob);
 }
 
-void DoSomethingState::Update(float deltaTime)
+void DoColorState::Update(float deltaTime)
 {
 	// leave for now
+	if (InputSystem::Get()->IsKeyPressed(KeyCode::SPACE))
+	{
+		MainApp().ChangeState("DoSomethingState");
+	}
 }
 
-void DoSomethingState::Render()
+void DoColorState::Render()
 {
 	auto context = GraphicsSystem::Get()->GetContext();
 
@@ -118,7 +124,7 @@ void DoSomethingState::Render()
 	context->Draw(static_cast<UINT>(m_vertices.size()), 0);
 }
 
-void DoSomethingState::Terminate()
+void DoColorState::Terminate()
 {
 	m_vertices.clear();
 	SafeRelease(m_pixelShader);

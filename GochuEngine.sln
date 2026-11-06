@@ -27,7 +27,17 @@ Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "Input", "Framework\Input\In
 EndProject
 Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "02_HelloAppState", "VGP242\02_HelloAppState\02_HelloAppState.vcxproj", "{EFCC1E77-1B2F-4F91-8F46-3118DE1FF064}"
 EndProject
-Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "03_HelloShapes", "03_HelloShapes\03_HelloShapes.vcxproj", "{DCB801F1-26AD-40C1-971E-AC7AE91F55AC}"
+Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "03_HelloShapes", "VGP242\03_HelloShapes\03_HelloShapes.vcxproj", "{DCB801F1-26AD-40C1-971E-AC7AE91F55AC}"
+EndProject
+Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "04_HelloCube", "VGP242\04_HelloCube\04_HelloCube.vcxproj", "{AC3CDA12-981F-4EAA-B592-348A958ADCCF}"
+EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Assets", "Assets", "{2F4A3245-BB10-44E7-BA2A-6842A04FE4EE}"
+EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Shaders", "Shaders", "{9CEBE6A8-3E5A-42A7-85A0-6EF12010EB4E}"
+	ProjectSection(SolutionItems) = preProject
+		Assets\Shaders\DoColor.fx = Assets\Shaders\DoColor.fx
+		Assets\Shaders\DoSomething.fx = Assets\Shaders\DoSomething.fx
+	EndProjectSection
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -109,6 +119,14 @@ Global
 		{DCB801F1-26AD-40C1-971E-AC7AE91F55AC}.Release|x64.Build.0 = Release|x64
 		{DCB801F1-26AD-40C1-971E-AC7AE91F55AC}.Release|x86.ActiveCfg = Release|Win32
 		{DCB801F1-26AD-40C1-971E-AC7AE91F55AC}.Release|x86.Build.0 = Release|Win32
+		{AC3CDA12-981F-4EAA-B592-348A958ADCCF}.Debug|x64.ActiveCfg = Debug|x64
+		{AC3CDA12-981F-4EAA-B592-348A958ADCCF}.Debug|x64.Build.0 = Debug|x64
+		{AC3CDA12-981F-4EAA-B592-348A958ADCCF}.Debug|x86.ActiveCfg = Debug|Win32
+		{AC3CDA12-981F-4EAA-B592-348A958ADCCF}.Debug|x86.Build.0 = Debug|Win32
+		{AC3CDA12-981F-4EAA-B592-348A958ADCCF}.Release|x64.ActiveCfg = Release|x64
+		{AC3CDA12-981F-4EAA-B592-348A958ADCCF}.Release|x64.Build.0 = Release|x64
+		{AC3CDA12-981F-4EAA-B592-348A958ADCCF}.Release|x86.ActiveCfg = Release|Win32
+		{AC3CDA12-981F-4EAA-B592-348A958ADCCF}.Release|x86.Build.0 = Release|Win32
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
@@ -123,6 +141,8 @@ Global
 		{3629F01A-6FED-42EB-B308-E9F7F1346EAF} = {74EBF962-33C7-4BE4-BCFA-36383FB7CC33}
 		{EFCC1E77-1B2F-4F91-8F46-3118DE1FF064} = {25044F08-AB9E-4D72-87AC-0B4FEA0213A9}
 		{DCB801F1-26AD-40C1-971E-AC7AE91F55AC} = {25044F08-AB9E-4D72-87AC-0B4FEA0213A9}
+		{AC3CDA12-981F-4EAA-B592-348A958ADCCF} = {25044F08-AB9E-4D72-87AC-0B4FEA0213A9}
+		{9CEBE6A8-3E5A-42A7-85A0-6EF12010EB4E} = {2F4A3245-BB10-44E7-BA2A-6842A04FE4EE}
 	EndGlobalSection
 	GlobalSection(ExtensibilityGlobals) = postSolution
 		SolutionGuid = {3EC9572C-6243-4D36-B916-4A5E6E56B02C}

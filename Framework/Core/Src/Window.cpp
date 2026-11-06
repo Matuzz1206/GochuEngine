@@ -24,8 +24,8 @@ LRESULT CALLBACK WindowMessageHandler(HWND handle, UINT msg, WPARAM wParam, LPAR
 
 void Window::Initialize(HINSTANCE instance, const std::wstring& appName, uint32_t width, uint32_t height)
 {
-	m_instance = instance;
-	m_appName = appName;
+	mInstance = instance;
+	mAppName = appName;
 
 	// This is a struct that the windowsAPI uses. You need to fill it out before winAPI can make a window.
 	WNDCLASSEX wcex;
@@ -40,26 +40,26 @@ void Window::Initialize(HINSTANCE instance, const std::wstring& appName, uint32_
 	wcex.hIconSm = LoadIcon(nullptr, IDI_APPLICATION);
 	wcex.hbrBackground = (HBRUSH)GetStockObject(BLACK_BRUSH);
 	wcex.lpszMenuName = nullptr;
-	wcex.lpszClassName = m_appName.c_str();
+	wcex.lpszClassName = mAppName.c_str();
 
 	RegisterClassEx(&wcex);
 
-	m_screenRect = { 0, 0, (LONG)width, (LONG)height };
-	AdjustWindowRect(&m_screenRect, WS_OVERLAPPEDWINDOW, FALSE);
+	mScreenRect = { 0, 0, (LONG)width, (LONG)height };
+	AdjustWindowRect(&mScreenRect, WS_OVERLAPPEDWINDOW, FALSE);
 
 	const int screenWidth = GetSystemMetrics(SM_CXSCREEN);
 	const int screenHeight = GetSystemMetrics(SM_CYSCREEN);
-	const int winWidth = std::min(static_cast<int>(m_screenRect.right - m_screenRect.left), screenWidth);
-	const int winHeight = std::min(static_cast<int>(m_screenRect.bottom - m_screenRect.top), screenHeight);
+	const int winWidth = std::min(static_cast<int>(mScreenRect.right - mScreenRect.left), screenWidth);
+	const int winHeight = std::min(static_cast<int>(mScreenRect.bottom - mScreenRect.top), screenHeight);
 	const int left = (screenWidth - winWidth) / 2;
 	const int top = (screenHeight - winHeight) / 2;
 
-	m_screenRect.left = left;
-	m_screenRect.top = top;
+	mScreenRect.left = left;
+	mScreenRect.top = top;
 
-	m_window = CreateWindow(
-		m_appName.c_str(),
-		m_appName.c_str(),
+	mWindow = CreateWindow(
+		mAppName.c_str(),
+		mAppName.c_str(),
 		WS_OVERLAPPEDWINDOW,
 		left, top,
 		winWidth, winHeight,
@@ -67,18 +67,18 @@ void Window::Initialize(HINSTANCE instance, const std::wstring& appName, uint32_
 		instance, nullptr
 	);
 
-	ShowWindow(m_window, SW_SHOWNORMAL);
+	ShowWindow(mWindow, SW_SHOWNORMAL);
 	SetCursorPos(screenWidth / 2, screenHeight / 2);
-	m_isActive = (m_window != nullptr);
+	mIsActive = (mWindow != nullptr);
 
 }
 void Window::Terminate()
 {
-	DestroyWindow(m_window);
-	UnregisterClass(m_appName.c_str(), m_instance);
-	m_window = nullptr;
-	m_instance = nullptr;
-	m_isActive = false;
+	DestroyWindow(mWindow);
+	UnregisterClass(mAppName.c_str(), mInstance);
+	mWindow = nullptr;
+	mInstance = nullptr;
+	mIsActive = false;
 }
 
 void Window::ProcessMessage()
@@ -90,16 +90,16 @@ void Window::ProcessMessage()
 		DispatchMessage(&msg);
 		if (WM_QUIT == msg.message)
 		{
-			m_isActive = false;
+			mIsActive = false;
 		}
 	}
 }
 
 HWND Window::GetWindowHandle() const
 {
-	return  m_window;
+	return  mWindow;
 }
 bool Window::IsActive() const
 {
-	return m_isActive;
+	return mIsActive;
 }

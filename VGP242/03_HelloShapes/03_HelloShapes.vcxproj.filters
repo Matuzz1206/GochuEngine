@@ -24,12 +24,24 @@
     <ClCompile Include="WinMain.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
+    <ClCompile Include="DiamondState.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="HeartState.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="DoColorState.h">
       <Filter>Header Files</Filter>
     </ClInclude>
     <ClInclude Include="DoSomethingState.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="DiamondState.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="HeartState.h">
       <Filter>Header Files</Filter>
     </ClInclude>
   </ItemGroup>

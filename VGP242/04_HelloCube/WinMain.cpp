@@ -1,5 +1,4 @@
 #include <GochuEngine/Inc/GochuEngine.h>
-#include "DoSomethingState.h"
 #include "DoColorState.h"
 
 int WinMain(HINSTANCE instance, HINSTANCE, LPSTR, int)
@@ -8,7 +7,6 @@ int WinMain(HINSTANCE instance, HINSTANCE, LPSTR, int)
 	config.appName = L"HelloShapes";
 
 	GochuEngine::App& myApp = GochuEngine::MainApp();
-	myApp.AddState<DoSomethingState>("DoSomethingState");
 	myApp.AddState<DoColorState>("DoColorState");
 	myApp.Run(config);
 
