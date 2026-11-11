@@ -1,134 +1,144 @@
 #include "DoColorState.h"
 
+
 using namespace GochuEngine;
 using namespace GochuEngine::Graphics;
 using namespace GochuEngine::Input;
 void DoColorState::Initialize()
 {
+	// set up camera
+	m_camera.SetPosition({ 0.0f, 1.0f, -3.0f });
+	m_camera.SetLookAt({ 0.0f, 0.0f, 0.0f });
+
+	// create a cube
+	//have 6 sides
+	// each side is 2 triangles
+	// each triangle is 3 vertices
+	// vertcie must be in clockwise order
+
+	// front
+	m_vertices.push_back({ { -1, -1, -1 }, Colors::Red });
+	m_vertices.push_back({ { -1, 1, -1 }, Colors::Red });
+	m_vertices.push_back({ { 1, 1, -1 }, Colors::Red });
+
+	m_vertices.push_back({ { -1, -1, -1 }, Colors::Blue });
+	m_vertices.push_back({ { 1, 1, -1 }, Colors::Blue });
+	m_vertices.push_back({ { 1, -1, -1 }, Colors::Blue });
+
+	// back
+	m_vertices.push_back({ { 1, -1, 1 }, Colors::Orange });
+	m_vertices.push_back({ { 1, 1, 1 }, Colors::Orange });
+	m_vertices.push_back({ { -1, 1, 1 }, Colors::Orange });
+
+	m_vertices.push_back({ { 1, -1, 1 }, Colors::Green });
+	m_vertices.push_back({ { -1, 1, 1 }, Colors::Green });
+	m_vertices.push_back({ { -1, -1, 1 }, Colors::Green });
+
+	// right
+	m_vertices.push_back({ { 1, -1, -1 }, Colors::Purple });
+	m_vertices.push_back({ { 1, 1, -1 }, Colors::Purple });
+	m_vertices.push_back({ { 1, 1, 1 }, Colors::Purple });
+
+	m_vertices.push_back({ { 1, -1, -1 }, Colors::Yellow });
+	m_vertices.push_back({ { 1, 1, 1 }, Colors::Yellow });
+	m_vertices.push_back({ { 1, -1, 1 }, Colors::Yellow });
+
+	// left
+	m_vertices.push_back({ { -1, -1, 1 }, Colors::Cyan });
+	m_vertices.push_back({ { -1, 1, 1 }, Colors::Cyan });
+	m_vertices.push_back({ { -1, 1, -1 }, Colors::Cyan });
+
+	m_vertices.push_back({ { -1, -1, 1 }, Colors::Pink });
+	m_vertices.push_back({ { -1, 1, -1 }, Colors::Pink });
+	m_vertices.push_back({ { -1, -1, -1 }, Colors::Pink	 });
+
+	// top
+	m_vertices.push_back({ { -1, 1, -1 }, Colors::PapayaWhip });
+	m_vertices.push_back({ { -1, 1, 1 }, Colors::PapayaWhip });
+	m_vertices.push_back({ { 1, 1, 1 }, Colors::PapayaWhip });
+
+	m_vertices.push_back({ { -1, 1, -1 }, Colors::Violet });
+	m_vertices.push_back({ { 1, 1, 1 }, Colors::Violet });
+	m_vertices.push_back({ { 1, 1, -1 }, Colors::Violet });
+
+	// bottom
+	m_vertices.push_back({ { -1, -1, 1 }, Colors::White });
+	m_vertices.push_back({ { -1, -1, -1 }, Colors::White });
+	m_vertices.push_back({ { 1, -1, -1 }, Colors::White });
+
+	m_vertices.push_back({ { -1, -1, 1 }, Colors::Gold });
+	m_vertices.push_back({ { 1, -1, -1 }, Colors::Gold });
+	m_vertices.push_back({ { 1, -1, 1 }, Colors::Gold });	
+
+
 	// create a shape
-	m_vertices.push_back({ { -0.5f, 0.0f, 0.0f } , Colors::Red });
-	m_vertices.push_back({ { 0.0f, 0.5f, 0.0f } ,Colors::Red });
-	m_vertices.push_back({ { 0.5f, 0.0f, 0.0f }, Colors::Red });
 
-	// start creating the components that communicate with  GPU
-	auto device = GraphicsSystem::Get()->GetDevice();
+	m_meshBuffer.Initialize(m_vertices.data(), sizeof(VertexPC), m_vertices.size());
+	std::filesystem::path shaderPath = L"../../Assets/Shaders/DoTransform.fx";
+	m_vertexShader.Initialize<VertexPC>(shaderPath);
+	m_pixelShader.Initialize(shaderPath);
 
-	// build the vertex buffer, which stores the vertices to give to GPU
-	D3D11_BUFFER_DESC bufferDesc{};
-	bufferDesc.ByteWidth = static_cast<UINT>(m_vertices.size()) * sizeof(Vertex);
-	bufferDesc.Usage = D3D11_USAGE_DEFAULT;
-	bufferDesc.BindFlags = D3D11_BIND_VERTEX_BUFFER;
-	bufferDesc.MiscFlags = 0;
-	bufferDesc.StructureByteStride = 0;
-
-	D3D11_SUBRESOURCE_DATA initData = {};
-	initData.pSysMem = m_vertices.data();
-
-	HRESULT hr = device->CreateBuffer(&bufferDesc, &initData, &m_vertexBuffer);
-	ASSERT(SUCCEEDED(hr), "Failed to create vertex buffer");
-	// ===========
-
-	// bind to the shader file
-	std::filesystem::path shaderFilePath = L"../../Assets/Shaders/DoSomething.fx";
-
-	DWORD shaderFlags = D3DCOMPILE_ENABLE_STRICTNESS | D3DCOMPILE_DEBUG;
-	ID3DBlob* shaderBlob = nullptr;
-	ID3DBlob* errorBlob = nullptr;
-	hr = D3DCompileFromFile(
-		shaderFilePath.c_str(),
-		nullptr,
-		D3D_COMPILE_STANDARD_FILE_INCLUDE,
-		"VS", "vs_5_0",
-		shaderFlags, 0,
-		&shaderBlob,
-		&errorBlob
-	);
-	if (errorBlob != nullptr && errorBlob->GetBufferPointer() != nullptr)
-	{
-		LOG("%s", static_cast<const char*>(errorBlob->GetBufferPointer()));
-	}
-	ASSERT(SUCCEEDED(hr), "Failed to compile vertex shader");
-
-	hr = device->CreateVertexShader(
-		shaderBlob->GetBufferPointer(),
-		shaderBlob->GetBufferSize(),
-		nullptr,
-		&m_vertexShader);
-	ASSERT(SUCCEEDED(hr), "Failed to create vertex shader");
-	//==========
-	// what is the make up of the vertex
-	std::vector<D3D11_INPUT_ELEMENT_DESC> vertexLayout;
-	vertexLayout.push_back({ "POSITION", 0, DXGI_FORMAT_R32G32B32_FLOAT, 0, D3D11_APPEND_ALIGNED_ELEMENT });
-	vertexLayout.push_back({ "COLOR", 0, DXGI_FORMAT_R32G32B32A32_FLOAT, 0, D3D11_APPEND_ALIGNED_ELEMENT });
-
-	hr = device->CreateInputLayout(
-		vertexLayout.data(),
-		static_cast<UINT>(vertexLayout.size()),
-		shaderBlob->GetBufferPointer(),
-		shaderBlob->GetBufferSize(),
-		&m_inputLayout
-	);
-	ASSERT(SUCCEEDED(hr), "Failed to create input layout");
-	SafeRelease(shaderBlob);
-	SafeRelease(errorBlob);
-	//====== 
-	// bind pixel shader to shader file
-	hr = D3DCompileFromFile(
-		shaderFilePath.c_str(),
-		nullptr,
-		D3D_COMPILE_STANDARD_FILE_INCLUDE,
-		"PS", "ps_5_0",
-		shaderFlags, 0,
-		&shaderBlob,
-		&errorBlob);
-	if (errorBlob != nullptr && errorBlob->GetBufferPointer() != nullptr)
-	{
-		LOG("%s", static_cast<const char*>(errorBlob->GetBufferPointer()));
-	}
-	ASSERT(SUCCEEDED(hr), "Failed to compile pixel shader");
-
-	hr = device->CreatePixelShader(
-		shaderBlob->GetBufferPointer(),
-		shaderBlob->GetBufferSize(),
-		nullptr,
-		&m_pixelShader);
-	ASSERT(SUCCEEDED(hr), "Failed to create pixel shader");
-	SafeRelease(shaderBlob);
-	SafeRelease(errorBlob);
+	m_transformBuffer.Initialize(sizeof(Math::Matrix4));
 }
 
 void DoColorState::Update(float deltaTime)
 {
-	// leave for now
-	if (InputSystem::Get()->IsKeyPressed(KeyCode::SPACE))
+	InputSystem* input = InputSystem::Get();
+	const float moveSpeed = (input->IsKeyDown(KeyCode::LSHIFT)) ? 10.0f : 1.0f;
+	const float turnSpeed = 0.1f;
+	if (input->IsKeyDown(KeyCode::W))
 	{
-		MainApp().ChangeState("DoSomethingState");
+		m_camera.Walk(moveSpeed * deltaTime);
+	}
+	else if (input->IsKeyDown(KeyCode::S))
+	{
+		m_camera.Walk(-moveSpeed * deltaTime);
+	}
+	if (input->IsKeyDown(KeyCode::D))
+	{
+		m_camera.Strafe(moveSpeed * deltaTime);
+	}
+	else if (input->IsKeyDown(KeyCode::A))
+	{
+		m_camera.Strafe(-moveSpeed * deltaTime);
+	}
+	if (input->IsKeyDown(KeyCode::Q))
+	{
+		m_camera.Rise(moveSpeed * deltaTime);
+	}
+	else if (input->IsKeyDown(KeyCode::E))
+	{
+		m_camera.Rise(-moveSpeed * deltaTime);
+	}
+	if (input->IsMouseDown(MouseButton::RBUTTON))
+	{
+		m_camera.Yaw(input->GetMouseMoveX() * turnSpeed * deltaTime);
+		m_camera.Pitch(input->GetMouseMoveY() * turnSpeed * deltaTime);
 	}
 }
 
 void DoColorState::Render()
 {
-	auto context = GraphicsSystem::Get()->GetContext();
+	m_vertexShader.Bind();
+	m_pixelShader.Bind();
+	m_transformBuffer.BindVS(0);
 
-	// bind all the buffers
-	context->VSSetShader(m_vertexShader, nullptr, 0);
-	context->IASetInputLayout(m_inputLayout);
-	context->PSSetShader(m_pixelShader, nullptr, 0);
+	// update buffer data
+	Math::Matrix4 matWorld = Math::Matrix4::Identity;
+	Math::Matrix4 matView = m_camera.GetViewMatrix();
+	Math::Matrix4 matProj = m_camera.GetProjectionMatrix();
+	Math::Matrix4 matFinal = matWorld * matView * matProj;
+	Math::Matrix4 wvp = Math::Transpose(matFinal);
+	m_transformBuffer.Update(&wvp);
 
-	context->IASetPrimitiveTopology(D3D11_PRIMITIVE_TOPOLOGY_TRIANGLELIST);
-
-	// draw
-	UINT stride = sizeof(Vertex);
-	UINT offset = 0;
-	context->IASetVertexBuffers(0, 1, &m_vertexBuffer, &stride, &offset);
-	context->Draw(static_cast<UINT>(m_vertices.size()), 0);
+	m_meshBuffer.Render();
 }
 
 void DoColorState::Terminate()
 {
 	m_vertices.clear();
-	SafeRelease(m_pixelShader);
-	SafeRelease(m_inputLayout);
-	SafeRelease(m_vertexShader);
-	SafeRelease(m_vertexBuffer);
+	m_transformBuffer.Terminate();
+	m_pixelShader.Terminate();
+	m_vertexShader.Terminate();
+	m_meshBuffer.Terminate();
 }

@@ -10,22 +10,12 @@ public:
 	void Render() override;
 	void Terminate() override;
 private:
-	struct Vertex
-	{
-		GochuEngine::Math::Vector3 position = GochuEngine::Math::Vector3::Zero;
-		GochuEngine::Color color = GochuEngine::Colors::White;
-
-	};
-
-	using Vertices = std::vector<Vertex>;
+	using Vertices = std::vector<GochuEngine::Graphics::VertexPC>;
 	Vertices m_vertices;
 
-	// our shape
-	ID3D11Buffer* m_vertexBuffer = nullptr;
-	// bind to the VS function
-	ID3D11VertexShader* m_vertexShader = nullptr;
-	// tell the vs configuration of the vertex
-	ID3D11InputLayout* m_inputLayout = nullptr;
-	// bind to the PS functdion
-	ID3D11PixelShader* m_pixelShader = nullptr;
+	GochuEngine::Graphics::MeshBuffer m_meshBuffer;
+	GochuEngine::Graphics::VertexShader m_vertexShader;
+	GochuEngine::Graphics::PixelShader m_pixelShader;
+	GochuEngine::Graphics::Camera m_camera;
+	GochuEngine::Graphics::ConstantBuffer m_transformBuffer;
 };
