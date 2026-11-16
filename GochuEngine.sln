@@ -40,6 +40,8 @@ Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Shaders", "Shaders", "{9CEB
 		Assets\Shaders\DoTransform.fx = Assets\Shaders\DoTransform.fx
 	EndProjectSection
 EndProject
+Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "05_HelloMeshBuilder", "05_HelloMeshBuilder\05_HelloMeshBuilder.vcxproj", "{38DF5A82-34D9-48DF-A68E-48F248B523EB}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|x64 = Debug|x64
@@ -128,6 +130,14 @@ Global
 		{AC3CDA12-981F-4EAA-B592-348A958ADCCF}.Release|x64.Build.0 = Release|x64
 		{AC3CDA12-981F-4EAA-B592-348A958ADCCF}.Release|x86.ActiveCfg = Release|Win32
 		{AC3CDA12-981F-4EAA-B592-348A958ADCCF}.Release|x86.Build.0 = Release|Win32
+		{38DF5A82-34D9-48DF-A68E-48F248B523EB}.Debug|x64.ActiveCfg = Debug|x64
+		{38DF5A82-34D9-48DF-A68E-48F248B523EB}.Debug|x64.Build.0 = Debug|x64
+		{38DF5A82-34D9-48DF-A68E-48F248B523EB}.Debug|x86.ActiveCfg = Debug|Win32
+		{38DF5A82-34D9-48DF-A68E-48F248B523EB}.Debug|x86.Build.0 = Debug|Win32
+		{38DF5A82-34D9-48DF-A68E-48F248B523EB}.Release|x64.ActiveCfg = Release|x64
+		{38DF5A82-34D9-48DF-A68E-48F248B523EB}.Release|x64.Build.0 = Release|x64
+		{38DF5A82-34D9-48DF-A68E-48F248B523EB}.Release|x86.ActiveCfg = Release|Win32
+		{38DF5A82-34D9-48DF-A68E-48F248B523EB}.Release|x86.Build.0 = Release|Win32
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
@@ -144,6 +154,7 @@ Global
 		{DCB801F1-26AD-40C1-971E-AC7AE91F55AC} = {25044F08-AB9E-4D72-87AC-0B4FEA0213A9}
 		{AC3CDA12-981F-4EAA-B592-348A958ADCCF} = {25044F08-AB9E-4D72-87AC-0B4FEA0213A9}
 		{9CEBE6A8-3E5A-42A7-85A0-6EF12010EB4E} = {2F4A3245-BB10-44E7-BA2A-6842A04FE4EE}
+		{38DF5A82-34D9-48DF-A68E-48F248B523EB} = {25044F08-AB9E-4D72-87AC-0B4FEA0213A9}
 	EndGlobalSection
 	GlobalSection(ExtensibilityGlobals) = postSolution
 		SolutionGuid = {3EC9572C-6243-4D36-B916-4A5E6E56B02C}

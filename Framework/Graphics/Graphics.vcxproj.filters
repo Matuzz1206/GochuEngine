@@ -42,6 +42,10 @@
     <ClInclude Include="Inc\Precompiled.h">
       <Filter>Inc</Filter>
     </ClInclude>
+    <ClInclude Include="Inc\MeshTypes.h" />
+    <ClInclude Include="Inc\MeshBuilder.h">
+      <Filter>Inc</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="Src\Precompiled.cpp">
@@ -65,10 +69,8 @@
     <ClCompile Include="Src\ConstantBuffer.cpp">
       <Filter>Src</Filter>
     </ClCompile>
-  </ItemGroup>
-  <ItemGroup>
-    <Text Include="Inc\InVertexShaderCPP.txt">
-      <Filter>Inc</Filter>
-    </Text>
+    <ClCompile Include="Src\MeshBuilder.cpp">
+      <Filter>Src</Filter>
+    </ClCompile>
   </ItemGroup>
 </Project>
